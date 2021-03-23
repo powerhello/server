@@ -24,7 +24,7 @@ COPY ./srcs/start_server.sh .
 RUN apt-get update -y; apt-get upgrade -y
 # RUN bash ./srcs/preinstall.sh
 # RUN bash preinstall.sh
-RUN apt-get -y install wget nginx vim php7.3 php7.3-mysql php7.3-mbstring php7.3-fpm php7.3-zip php 7.3-xml mariadb-server
+RUN apt-get -y install wget nginx vim php7.3 php7.3-mysql php7.3-mbstring php7.3-fpm php7.3-zip php7.3-xml mariadb-server
 
 #change working directory
 WORKDIR /var/www/site
@@ -62,5 +62,5 @@ RUN ln -s /etc/nginx/sites-available/nginx.conf /etc/nginx/sites-enabled/nginx.c
 RUN chown -R www-data /var/www/*
 RUN chmod -R 755 /var/www/*
 RUN chmod -R 755 start_server.sh
-EXPOSE 80 443
+# EXPOSE 80 443
 CMD bash start_server.sh
