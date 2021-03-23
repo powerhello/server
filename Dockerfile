@@ -35,14 +35,14 @@ RUN wget https://files.phpmyadmin.net/phpMyAdmin/5.1.0/phpMyAdmin-5.1.0-english.
 RUN tar xvf phpMyAdmin-5.1.0-english.tar.gz
 RUN rm phpMyAdmin-5.1.0-english.tar.gz
 RUN mv phpMyAdmin-5.1.0-english/ var/www/site/phpmyadmin
-COPY ./srcs/php_config.inc.php /var/www/site/phpmyadmin
+COPY ./srcs/config.inc.php /var/www/site/phpmyadmin
 
 # #WordPress
 RUN wget https://wordpress.org/latest.tar.gz
 RUN tar -xvzf latest.tar.gz
 RUN rm latest.tar.gz
 RUN mv wordpress/ var/www/site/wordpress
-COPY ./srcs/wp_config.php /var/www/site/wordpress
+COPY ./srcs/wp-config.php /var/www/site/wordpress
 
 
 
