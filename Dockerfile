@@ -11,11 +11,11 @@ LABEL maintainer="cbleadr@gmail.com"
 # WORKDIR /var/www/site
 # WORKDIR /
 COPY ./srcs/start_server.sh .
-COPY ./srcs/prepare_php.sh .
-COPY ./srcs/prepare_nginx.sh .
-COPY ./srcs/run_update.sh .
-COPY ./srcs/preinstall.sh .
-COPY ./srcs/prepare_wordpress.sh .
+# COPY ./srcs/prepare_php.sh .
+# COPY ./srcs/prepare_nginx.sh .
+# COPY ./srcs/run_update.sh .
+# COPY ./srcs/preinstall.sh .
+# COPY ./srcs/prepare_wordpress.sh .
 
 
 
@@ -24,37 +24,36 @@ COPY ./srcs/prepare_wordpress.sh .
 RUN apt-get update -y; apt-get upgrade -y
 # RUN bash ./srcs/preinstall.sh
 # RUN bash preinstall.sh
-RUN apt-get -y install wget nginx vim php php-mysql php-mbstring php-fpm php-zip mariadb-server
+RUN apt-get -y install wget nginx vim php7.3 php7.3-mysql php7.3-mbstring php7.3-fpm php7.3-zip php 7.3-xml mariadb-server
 
 #change working directory
 WORKDIR /var/www/site
 WORKDIR /
+
 # #PHP admin
-# CMD bash ./srcs/prepare_php.sh
-RUN bash prepare_php.sh
-COPY ./srcs/php_config.inc.php /var/www/site/phpMyAdmin
+RUN wget https://files.phpmyadmin.net/phpMyAdmin/5.1.0/phpMyAdmin-5.1.0-english.tar.gz
+RUN tar xvf phpMyAdmin-5.1.0-english.tar.gz
+RUN rm phpMyAdmin-5.1.0-english.tar.gz
+RUN mv phpMyAdmin-5.1.0-english/ var/www/site/phpmyadmin
+COPY ./srcs/php_config.inc.php /var/www/site/phpmyadmin
+
 # #WordPress
-# CMD bash ./srcs/prepare_wordpress.sh
-RUN bash prepare_wordpress.sh
-COPY ./srcs/wp_config.php /var/www/site/wordPress
+RUN wget https://wordpress.org/latest.tar.gz
+RUN tar -xvzf latest.tar.gz
+RUN rm latest.tar.gz
+RUN mv wordpress/ var/www/site/wordpress
+COPY ./srcs/wp_config.php /var/www/site/wordpress
 
 
 
 
 #make plush SSL
-# CMD ["/bin/bash", "-c", "openssl req -x509 -newkey -nodes rsa:4096 -days 90 \
-# 		-keyout /etc/ssl/certs/ssl.key \
-# 		-out /etc/ssl/private/ssl.crt \ 
-# 		-subj '/CN=localhost';"]
-# RUN openssl req -x509 -newkey -nodes rsa:2048 -keyout /etc/ssl/certs/ssl.key -out /etc/ssl/private/ssl.crt -days 90  -subj '/CN=localhost'
-RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-	-out /etc/ssl/private/ssl.crt \
-	-keyout /etc/ssl/certs/ssl.key \
+RUN openssl req -x509 -nodes -days 90 -newkey rsa:2048 \
+	-out /etc/ssl/certs/ssl.crt \
+	-keyout /etc/ssl/private/ssl.key \
 	-subj "/C=RU/ST=Tatarstan/L=Kazan/O=Ecole/OU=21/CN=localhost"
 
 #nginx
-# CMD bash ./srcs/prepare_nginx.sh
-# RUN bash prepare_nginx.sh
 COPY ./srcs/nginx.conf /etc/nginx/sites-available/nginx.conf
 RUN ln -s /etc/nginx/sites-available/nginx.conf /etc/nginx/sites-enabled/nginx.conf
 
